@@ -1,2 +1,1 @@
-<?php
-echo "Merged Successfully";
+Merged Successfully
