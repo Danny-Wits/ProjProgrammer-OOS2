@@ -188,4 +188,4 @@ The base URL for accessing the API depends on your server configuration. You can
 
 - Always ensure that the API key is passed correctly in the Authorization header in production environments.
 - Make sure to provide valid JSON data for endpoints that expect it in the request body.
-  -@urbutt read this carefully
+- read [license](licence)
