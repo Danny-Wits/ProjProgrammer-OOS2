@@ -1,0 +1,15 @@
+# @Danny-Wits Redirecting every thing to index.php
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+Options -Indexes
+RewriteRule . index.php [L,QSA]
+
+# Restricting access to the config file
+
+<Files config.php>
+    Order Allow,Deny
+    Deny from all
+</Files>
