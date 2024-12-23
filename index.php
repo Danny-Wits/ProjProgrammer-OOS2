@@ -24,14 +24,15 @@ if (!$dev) {
         throw new Exception("Unauthorized", 401);
     }
 }
-
+//!Constants 
+$Database = new Database(host: $config['db_host'], username: $config['db_user'], password: $config['db_pass'], database: $config['db_name']);
 
 class Controller
 {
-    function __construct(private array $requestArgs)
+    function __construct(private array $requestArgs, private Database $Database)
     {
     }
-    //! GET END POINTS 
+    // GET END POINTS 
 
     // Leaderboard Endpoint
     public function leaderboardGet(): void
@@ -40,7 +41,9 @@ class Controller
         $category = strtolower($category);
         $category = explode("?", $category)[0];
         //Gets the leaderboard
-        $services = new Services();
+
+
+        $services = new Services($this->Database);
         $services->GetLeaderboard($category);
     }
     //User Endpoint
@@ -53,7 +56,7 @@ class Controller
         } else {
             throw new Exception("Valid ID is required", 400);
         }
-        $services = new Services();
+        $services = new Services($this->Database);
         $services->GetUser($id);
     }
 
@@ -63,24 +66,45 @@ class Controller
     public function registerPost(): void
     {
 
+
         // New User Endpoint
         //Getting the Request Arguments from RequestBody
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
+        $userName = $requestArgs['username'] ?? null;
         $name = $requestArgs['name'] ?? null;
         $email = $requestArgs['email'] ?? null;
         $password = $requestArgs['password'] ?? null;
+        $dateOfBirth = $requestArgs['dateOfBirth'] ?? null;
+        $location = $requestArgs['location'] ?? null;
+        $bio = $requestArgs['bio'] ?? null;
+        $profilePicture = $requestArgs['profilePicture'] ?? null;
+        $profession = $requestArgs['profession'] ?? null;
 
         //Input Checks
         if (!isset($name) || trim($name) == "") {
             throw new Exception("Valid Name is required", 400);
+        } elseif (!isset($userName) || trim($userName) == "" || strlen($userName) < 4) {
+            throw new Exception("Valid Username is required", 400);
         } elseif (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Valid Email is required", 400);
         } elseif (!isset($password) || strlen($password) < 8) {
             throw new Exception("Valid Password is required", 400);
+        } elseif (!isset($dateOfBirth)) {
+            throw new Exception("Valid Date of Birth is required", 400);
+        } elseif (!isset($location)) {
+            throw new Exception("Valid Location is required", 400);
+        } elseif (!isset($bio)) {
+            throw new Exception("Valid Bio is required", 400);
+        } elseif (!isset($profilePicture)) {
+            throw new Exception("Valid Profile Picture is required", 400);
+        } elseif (!isset($profession)) {
+            throw new Exception("Valid Profession is required", 400);
         }
 
-        $services = new Services();
-        $services->CreateUser($name, $email, $password);
+
+
+        $services = new Services($this->Database);
+        $services->CreateUser(name: $name, email: $email, password: $password, username: $userName, dateOfBirth: $dateOfBirth, location: $location, bio: $bio, profilePicture: $profilePicture, profession: $profession);
 
     }
     //Login Endpoint
@@ -90,16 +114,16 @@ class Controller
         // New User Endpoint
         //Getting the Request Arguments from RequestBody
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
-        $name = $requestArgs['name'] ?? null;
+        $username = $requestArgs['username'] ?? null;
         $password = $requestArgs['password'] ?? null;
         //Input Checks
-        if (!isset($name) || trim($name) == "") {
-            throw new Exception("Valid Name is required", 400);
+        if (!isset($username) || trim($username) == "") {
+            throw new Exception("Valid username is required", 400);
         } elseif (!isset($password) || strlen($password) < 8) {
             throw new Exception("Valid Password is required", 400);
         }
-        $services = new Services();
-        $services->AuthenticateUser($name, $password);
+        $services = new Services($this->Database);
+        $services->AuthenticateUser($username, $password);
     }
 
     //!PUT END POINTS
@@ -111,21 +135,21 @@ class Controller
         }
         $id = (int) $id;
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
-        $name = $requestArgs['name'] ?? null;
         $email = $requestArgs['email'] ?? null;
+        $oldPassword = $requestArgs['old_password'] ?? null;
         $password = $requestArgs['password'] ?? null;
 
         //Input Checks
-        if (!isset($name) || trim($name) == "") {
-            throw new Exception("Valid Name is required", 400);
-        } elseif (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Valid Email is required", 400);
+        if (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Valid email is required", 400);
         } elseif (!isset($password) || strlen($password) < 8) {
-            throw new Exception("Valid Password is required", 400);
+            throw new Exception("Valid password is required", 400);
+        } elseif (!isset($oldPassword) || strlen($oldPassword) < 8) {
+            throw new Exception("Valid old_password is required", 400);
         }
 
-        $services = new Services();
-        $services->UpdateUser($id, $name, $email, $password);
+        $services = new Services($this->Database);
+        $services->UpdateUser($id, $email, $oldPassword, $password);
 
     }
     public function statsPut(): void
@@ -137,16 +161,66 @@ class Controller
         }
         $id = (int) $id;
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
-        $stats = $requestArgs['stats'] ?? null;
+        $stats = json_encode($requestArgs['stats'] ?? "");
+
 
         //Input Checks
         if (!isset($stats)) {
             throw new Exception("Valid stats is required", 400);
         }
-
-        $services = new Services();
-        $services->UpdateStats(id: $id, stats: $stats, );
+        if (!isValidJson($stats)) {
+            throw new Exception("Stats are not in JSON FORMAT", 400);
+        }
+        $services = new Services($this->Database);
+        $services->UpdateStats(id: $id, stats: $stats);
     }
+
+    public function friendsPut(): void
+    {
+        // Handles friends
+        $id = $this->requestArgs[0] ?? null;
+        if (!isset($id) || !is_numeric($id)) {
+            throw new Exception("Valid ID is required", 400);
+        }
+        $id = (int) $id;
+        $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
+        $friends = json_encode($requestArgs['friends'] ?? "");
+
+        //Input Checks
+        if (!isset($friends)) {
+            throw new Exception("Valid friends is required", 400);
+        }
+        if (!isValidJson($friends)) {
+            throw new Exception("Friends are not in JSON FORMAT", 400);
+        }
+
+        $services = new Services($this->Database);
+        $services->UpdateFriends(id: $id, friends: $friends);
+    }
+    public function targetsPut(): void
+    {
+        // Handles target
+        $id = $this->requestArgs[0] ?? null;
+        if (!isset($id) || !is_numeric($id)) {
+            throw new Exception("Valid ID is required", 400);
+        }
+        $id = (int) $id;
+        $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
+        $target = json_encode($requestArgs['target'] ?? "");
+
+        //Input Checks
+        if (!isset($target)) {
+            throw new Exception("Valid target is required", 400);
+        }
+        if (!isValidJson($target)) {
+            throw new Exception("Target is not in JSON FORMAT", 400);
+        }
+
+        $services = new Services($this->Database);
+        $services->UpdateTarget(id: $id, target: $target);
+    }
+
+
     //!DELETE END POINTS
     public function usersDelete(): void
     {
@@ -155,12 +229,11 @@ class Controller
             throw new Exception("Valid ID is required", 400);
         }
         $id = (int) $id;
-        $services = new Services();
+        $services = new Services($this->Database);
         $services->DeleteUser($id);
     }
 
 }
-//!Constants 
 
 //!Routing
 //Getting the Method and URI 
@@ -171,11 +244,11 @@ if (isHosting()) {
     //fixing a indexing for hosting 
     $request = $requestUri[0] ?? "none";
     $requestUri = [$requestUri[1] ?? null];
-    $controller = new Controller($requestUri);
+    $controller = new Controller($requestUri, $Database);
 } else {
     $request = $requestUri[1] ?? "none";
     $requestUri = [$requestUri[2] ?? null];
-    $controller = new Controller($requestUri);
+    $controller = new Controller($requestUri, $Database);
 }
 
 
@@ -203,6 +276,10 @@ switch ($requestMethod) {
             $controller->usersPut();
         } elseif ($request == "stats") {
             $controller->statsPut();
+        } elseif ($request == "friends") {
+            $controller->friendsPut();
+        } elseif ($request == "targets") {
+            $controller->targetsPut();
         } else {
             not_valid_method();
         }
@@ -217,17 +294,29 @@ switch ($requestMethod) {
     default:
         Header("HTTP/1.1 405 Method Not Allowed");
         Header("Allow: GET,PUT,POST,DELETE");
-        throw new Exception("Invalid Request Method");
+        throw new Exception("Invalid Request Method", 400);
 
 }
 function not_valid_method(): never
 {
-    $allowedRequests = "/users,/leaderboard,/login,/register,/stats";
+    $allowedRequests = "GET: users/,/leaderboard" . " | " .
+        "Post:/register,/login" . "| " .
+        "PUT:/users/,/stats,/friends,/targets" . " | " .
+        "DELETE:/users/ ";
     throw new Exception("Invalid Request Type : ONLY ALLOWED : $allowedRequests", 405);
 
 }
 function isHosting(): bool
 {
     return $_SERVER['SERVER_NAME'] !== "localhost";
+}
+function isValidJson($string)
+{
+
+    if (empty($string))
+        return false;
+    json_decode($string);
+
+    return (json_last_error() === JSON_ERROR_NONE);
 }
 ?>
