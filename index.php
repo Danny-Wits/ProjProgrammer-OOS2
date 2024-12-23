@@ -174,7 +174,7 @@ if (isHosting()) {
     $controller = new Controller($requestUri);
 } else {
     $request = $requestUri[1] ?? "none";
-    $requestUri = [$requestUri[2]];
+    $requestUri = [$requestUri[2] ?? null];
     $controller = new Controller($requestUri);
 }
 
