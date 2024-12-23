@@ -36,7 +36,7 @@ class Controller
     // Leaderboard Endpoint
     public function leaderboardGet(): void
     {
-        $category = $this->requestArgs[2] ?? "default";
+        $category = $this->requestArgs[0] ?? "default";
         $category = strtolower($category);
         $category = explode("?", $category)[0];
         //Gets the leaderboard
@@ -47,7 +47,7 @@ class Controller
     public function usersGet(): void
     {
         //Gets  stats and targets  for a user
-        $id = $this->requestArgs[2] ?? null;
+        $id = $this->requestArgs[0] ?? null;
         if (isset($id) && is_numeric($id)) {
             $id = (int) $id;
         } else {
@@ -105,7 +105,7 @@ class Controller
     //!PUT END POINTS
     public function usersPut(): void
     {
-        $id = $this->requestArgs[2] ?? null;
+        $id = $this->requestArgs[0] ?? null;
         if (!isset($id) || !is_numeric($id)) {
             throw new Exception("Valid ID is required", 400);
         }
@@ -131,7 +131,7 @@ class Controller
     public function statsPut(): void
     {
         // Handles stats
-        $id = $this->requestArgs[2] ?? null;
+        $id = $this->requestArgs[0] ?? null;
         if (!isset($id) || !is_numeric($id)) {
             throw new Exception("Valid ID is required", 400);
         }
@@ -150,7 +150,7 @@ class Controller
     //!DELETE END POINTS
     public function usersDelete(): void
     {
-        $id = $this->requestArgs[2] ?? null;
+        $id = $this->requestArgs[0] ?? null;
         if (!isset($id) || !is_numeric($id)) {
             throw new Exception("Valid ID is required", 400);
         }
@@ -167,12 +167,17 @@ class Controller
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestUri = explode("/", trim($requestUri, "/"));
-$request = $requestUri[1] ?? "none";
+if (isHosting()) {
+    //fixing a indexing for hosting 
+    $request = $requestUri[0] ?? "none";
+    $requestUri = [$requestUri[1]];
+    $controller = new Controller($requestUri);
+} else {
+    $request = $requestUri[1] ?? "none";
+    $requestUri = [$requestUri[2]];
+    $controller = new Controller($requestUri);
+}
 
-unset($requestUri[0]);
-unset($requestUri[1]);
-
-$controller = new Controller($requestUri);
 
 switch ($requestMethod) {
     case "GET":
@@ -220,5 +225,9 @@ function not_valid_method(): never
     $allowedRequests = "/users,/leaderboard,/login,/register,/stats";
     throw new Exception("Invalid Request Type : ONLY ALLOWED : $allowedRequests", 405);
 
+}
+function isHosting(): bool
+{
+    return $_SERVER['SERVER_NAME'] !== "localhost";
 }
 ?>
