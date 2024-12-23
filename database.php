@@ -139,11 +139,10 @@ class Database
     }
     public function GetLeaderBoard(string $category = "default"): array
     {
-        $query = "SELECT * FROM LeaderBoard ";
+        $query = "SELECT _UserName,_Score,RANK() OVER (ORDER BY _Score DESC) AS _Rank FROM InfoTable ";
         $preparedStatement = $this->prepare($query);
-        // $preparedStatement->bindParam(':category', $category, PDO::PARAM_STR);
         $preparedStatement->execute();
         $result = $preparedStatement->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        return $result ?: [];
     }
 }
