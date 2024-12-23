@@ -170,7 +170,7 @@ $requestUri = explode("/", trim($requestUri, "/"));
 if (isHosting()) {
     //fixing a indexing for hosting 
     $request = $requestUri[0] ?? "none";
-    $requestUri = [$requestUri[1]];
+    $requestUri = [$requestUri[1] ?? null];
     $controller = new Controller($requestUri);
 } else {
     $request = $requestUri[1] ?? "none";
