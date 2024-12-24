@@ -69,7 +69,6 @@ class Services
         $lastLogin = date("Y-m-d H:i:s");
         $this->database->AddToAuthTable($userId, $username, defaultHash($password), $createdOn, $lastLogin, $email);
         $this->database->AddToInfoTable($userId, $username, $name, $dateOfBirth, $profilePicture, $bio, $location, $profession);
-        echo json_encode("User Created Successfully with id " . $userId);
         echo json_encode($this->database->GetUserInfo($userId));
 
     }
@@ -86,7 +85,6 @@ class Services
             throw new Exception("Invalid Credentials:WRONG PASSWORD", 400);
         }
         $this->database->successfulLogin($authInfo['_UserId']);
-        echo json_encode("User Authenticated Successfully");
         echo json_encode($this->database->GetUserInfo($authInfo['_UserId']));
 
     }
@@ -111,9 +109,7 @@ class Services
         }
 
         $this->database->UpdateUser($UserID, $email, defaultHash($password));
-        echo json_encode("User Updated Successfully");
         echo json_encode($this->database->GetUserAuthInfo($UserID));
-        echo json_encode($this->database->GetUserInfo($UserID));
 
     }
     public function DeleteUser(int $id): void
@@ -124,7 +120,6 @@ class Services
     public function UpdateStats(int $id, string $stats): void
     {
         $this->database->SetStats($id, $stats);
-        echo json_encode("Stats Updated Successfully");
         echo json_encode($this->database->GetUserInfo($id));
     }
     public function UpdateFriends(int $id, string $friends): void
@@ -136,7 +131,6 @@ class Services
     public function UpdateTarget(int $id, string $target): void
     {
         $this->database->SetTargets($id, $target);
-        echo json_encode("Target Updated Successfully");
         echo json_encode($this->database->GetUserInfo($id));
     }
 
@@ -147,7 +141,6 @@ class Services
     }
     public function GetLeaderBoard(string $category = "default"): void
     {
-        echo json_encode(" LeaderBoard Fetched Successfully");
         echo json_encode($this->database->GetLeaderBoard($category));
 
     }
