@@ -13,3 +13,7 @@ RewriteRule . index.php [L,QSA]
     Order Allow,Deny
     Deny from all
 </Files>
+
+<IfModule mod_headers.c>
+Header set Access-Control-Allow-Origin "*"
+</IfModule>
