@@ -13,7 +13,7 @@ $config = require("config.php");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTION");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Max-Age", "3600");
+header("Access-Control-Max-Age:3600");
 //Setting up custom error handler and exception handler
 set_error_handler("CustomErrorHandler::errorHandler", E_ALL);
 set_exception_handler("CustomErrorHandler::exceptionHandler");
