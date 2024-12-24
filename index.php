@@ -81,26 +81,26 @@ class Controller
         $bio = $requestArgs['bio'] ?? null;
         $profilePicture = $requestArgs['profilePicture'] ?? null;
         $profession = $requestArgs['profession'] ?? null;
-        throw new Exception("Valid Profession is required", 500);
+        
         //Input Checks
         if (!isset($name) || trim($name) == "") {
-            throw new Exception("Valid Name is required", 400);
+            throw new Exception("Valid Name is required", 401);
         } elseif (!isset($userName) || trim($userName) == "" || strlen($userName) < 4) {
-            throw new Exception("Valid Username is required", 400);
+            throw new Exception("Valid Username is required", 402);
         } elseif (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Valid Email is required", 400);
+            throw new Exception("Valid Email is required", 403);
         } elseif (!isset($password) || strlen($password) < 8) {
-            throw new Exception("Valid Password is required", 400);
+            throw new Exception("Valid Password is required", 404);
         } elseif (!isset($dateOfBirth)) {
-            throw new Exception("Valid Date of Birth is required", 400);
+            throw new Exception("Valid Date of Birth is required", 405);
         } elseif (!isset($location)) {
-            throw new Exception("Valid Location is required", 400);
+            throw new Exception("Valid Location is required", 406);
         } elseif (!isset($bio)) {
-            throw new Exception("Valid Bio is required", 400);
+            throw new Exception("Valid Bio is required", 407);
         } elseif (!isset($profilePicture)) {
-            throw new Exception("Valid Profile Picture is required", 400);
+            throw new Exception("Valid Profile Picture is required", 408);
         } elseif (!isset($profession)) {
-            throw new Exception("Valid Profession is required", 400);
+            throw new Exception("Valid Profession is required", 409);
         }
 
 

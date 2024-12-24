@@ -60,7 +60,7 @@ class Services
 
         //Already Exists
         if ($this->database->IfUserExists($username)) {
-            throw new Exception("User Already Exists", 400);
+            throw new Exception("User Already Exists", 410);
         }
 
         //Create User
