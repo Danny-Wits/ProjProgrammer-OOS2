@@ -265,6 +265,7 @@ switch ($requestMethod) {
         }
         break;
     case "POST":
+    case "OPTION":
         if ($request == "register") {
             $controller->registerPost();
         } elseif ($request == "login") {
