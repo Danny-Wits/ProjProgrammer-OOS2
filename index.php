@@ -12,7 +12,7 @@ $config = require("config.php");
 //Setting up the header
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *"); // Allow any origin 
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTION");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 //Setting up custom error handler and exception handler
