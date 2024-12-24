@@ -296,7 +296,7 @@ switch ($requestMethod) {
     default:
         Header("HTTP/1.1 405 Method Not Allowed");
         Header("Allow: GET,PUT,POST,DELETE,OPTION");
-        throw new Exception("Invalid Request Method", 400);
+        throw new Exception("Invalid Request Method", 405);
 
 }
 function not_valid_method(): never
