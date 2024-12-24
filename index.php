@@ -81,10 +81,10 @@ class Controller
         $bio = $requestArgs['bio'] ?? null;
         $profilePicture = $requestArgs['profilePicture'] ?? null;
         $profession = $requestArgs['profession'] ?? null;
-        
+
         //Input Checks
         if (!isset($name) || trim($name) == "") {
-            throw new Exception("Valid Name is required", 401);
+            throw new Exception("Valid Name is required", 411);
         } elseif (!isset($userName) || trim($userName) == "" || strlen($userName) < 4) {
             throw new Exception("Valid Username is required", 402);
         } elseif (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
