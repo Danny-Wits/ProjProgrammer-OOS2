@@ -81,7 +81,7 @@ class Controller
         $bio = $requestArgs['bio'] ?? null;
         $profilePicture = $requestArgs['profilePicture'] ?? null;
         $profession = $requestArgs['profession'] ?? null;
-
+        throw new Exception("Valid Profession is required", 500);
         //Input Checks
         if (!isset($name) || trim($name) == "") {
             throw new Exception("Valid Name is required", 400);
