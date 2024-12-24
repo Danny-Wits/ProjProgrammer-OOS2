@@ -84,23 +84,23 @@ class Controller
 
         //Input Checks
         if (!isset($name) || trim($name) == "") {
-            throw new Exception("Valid Name is required", 411);
+            throw new Exception("Valid Name is required", 400);
         } elseif (!isset($userName) || trim($userName) == "" || strlen($userName) < 4) {
-            throw new Exception("Valid Username is required", 402);
+            throw new Exception("Valid Username is required", 400);
         } elseif (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Valid Email is required", 403);
+            throw new Exception("Valid Email is required", 400);
         } elseif (!isset($password) || strlen($password) < 8) {
-            throw new Exception("Valid Password is required", 404);
+            throw new Exception("Valid Password is required", 400);
         } elseif (!isset($dateOfBirth)) {
-            throw new Exception("Valid Date of Birth is required", 405);
+            throw new Exception("Valid Date of Birth is required", 400);
         } elseif (!isset($location)) {
-            throw new Exception("Valid Location is required", 406);
+            throw new Exception("Valid Location is required", 400);
         } elseif (!isset($bio)) {
-            throw new Exception("Valid Bio is required", 407);
+            throw new Exception("Valid Bio is required", 400);
         } elseif (!isset($profilePicture)) {
-            throw new Exception("Valid Profile Picture is required", 408);
+            throw new Exception("Valid Profile Picture is required", 400);
         } elseif (!isset($profession)) {
-            throw new Exception("Valid Profession is required", 409);
+            throw new Exception("Valid Profession is required", 400);
         }
 
 
@@ -265,7 +265,6 @@ switch ($requestMethod) {
         }
         break;
     case "POST":
-    case "OPTIONS":
         if ($request == "register") {
             $controller->registerPost();
         } elseif ($request == "login") {
