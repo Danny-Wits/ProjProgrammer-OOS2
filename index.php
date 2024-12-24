@@ -14,6 +14,11 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTION");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Max-Age:3600");
+// Handle preflight request for OPTIONS method
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    // Terminate the script after sending the headers to prevent further processing
+    exit(0);
+}
 //Setting up custom error handler and exception handler
 set_error_handler("CustomErrorHandler::errorHandler", E_ALL);
 set_exception_handler("CustomErrorHandler::exceptionHandler");
