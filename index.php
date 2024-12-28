@@ -167,7 +167,7 @@ class Controller
             throw new Exception("Valid ID is required. This is not a valid Id : {$id}", 400);
         }
         $id = (int) $id;
-        $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true, 0);
+        $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true, 1);
         $stats = json_encode($requestArgs['stats'] ?? "");
 
 
