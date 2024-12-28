@@ -164,7 +164,7 @@ class Controller
         // Handles stats
         $id = $this->requestArgs[0] ?? null;
         if (!isset($id) || !is_numeric($id)) {
-            throw new Exception("Valid ID is required", 400);
+            throw new Exception("Valid ID is required. This is not a valid Id : " + $id, 400);
         }
         $id = (int) $id;
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
