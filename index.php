@@ -168,7 +168,7 @@ class Controller
         }
         $id = (int) $id;
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
-        $stats = json_encode($requestArgs['stats'] ?? "");
+        $stats = $requestArgs['stats'] ?? null;
 
 
         //Input Checks

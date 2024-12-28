@@ -101,10 +101,9 @@ class Database
         $preparedStatement->execute();
 
     }
-    public function SetStats(int $userId, string $stats): void
+    public function SetStats(int $userId, array $stats): void
     {
         $query = "Update InfoTable SET _Stats = :stats WHERE _UserId = :userId;";
-
         $preparedStatement = $this->prepare($query);
         $preparedStatement->bindParam(':userId', $userId, PDO::PARAM_INT);
         $preparedStatement->bindParam(':stats', $stats, PDO::PARAM_STR);
