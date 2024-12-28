@@ -117,7 +117,7 @@ class Services
         $this->database->DeleteUser($id);
         echo json_encode("User Deleted Successfully : User ID " . $id);
     }
-    public function UpdateStats(int $id, array $stats): void
+    public function UpdateStats(int $id, string $stats): void
     {
         $this->database->SetStats($id, $stats);
         echo json_encode($this->database->GetUserInfo($id));
