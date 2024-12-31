@@ -67,6 +67,14 @@ class Controller
         $services->GetUser($id);
     }
 
+    //UserList Endpiont
+    public function userList(): void
+    {
+        //Gets  all available Users 
+        $services = new Services($this->Database);
+        $services->getUserList();
+    }
+
     //!POST END POINTS 
 
     // Register Endpoint
@@ -263,6 +271,8 @@ switch ($requestMethod) {
             $controller->usersGet();
         } elseif ($request == "leaderboard") {
             $controller->leaderboardGet();
+        } elseif ($request == "userlist") {
+            $controller->userList();
         } else {
             not_valid_method();
         }

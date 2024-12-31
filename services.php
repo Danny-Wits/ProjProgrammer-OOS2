@@ -155,4 +155,9 @@ class Services
         return $result;
     }
 
+    function getUserList(): void
+    {
+        echo json_encode($this->database->GetUserList());
+    }
+
 }

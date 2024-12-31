@@ -144,4 +144,16 @@ class Database
         $result = $preparedStatement->fetchAll(PDO::FETCH_ASSOC);
         return $result ?: [];
     }
+    public function GetUserList(): array
+    {
+        $query = "SELECT _UserName FROM AuthTable;";
+        $preparedStatement = $this->prepare($query);
+        $preparedStatement->execute();
+        $result = $preparedStatement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $users[] = $row['_UserName'];
+        }
+        return $users ?: [];
+
+    }
 }
