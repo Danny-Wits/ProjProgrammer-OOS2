@@ -310,7 +310,7 @@ switch ($requestMethod) {
             $controller->friendsPut();
         } elseif ($request == "targets") {
             $controller->targetsPut();
-        } elseif ($request == "addFriend") {
+        } elseif ($request == "addfriend") {
             $controller->addFriend();
         } else {
             not_valid_method();
