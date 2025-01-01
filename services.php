@@ -124,8 +124,9 @@ class Services
     }
     public function UpdateFriends(int $id, string $friends): void
     {
+        $oldFriends = $this->database->GetUserInfo($id)["_Friends"] ?? "";
+        $friends = $oldFriends . "," . $friends;
         $this->database->SetFriends($id, $friends);
-        echo json_encode("Friends Updated Successfully");
         echo json_encode($this->database->GetUserInfo($id));
     }
     public function UpdateTarget(int $id, string $target): void
