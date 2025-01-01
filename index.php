@@ -304,14 +304,14 @@ switch ($requestMethod) {
     case "PUT":
         if ($request == "users") {
             $controller->usersPut();
+        } elseif ($request == "addfriend") {
+            $controller->addFriend();
         } elseif ($request == "stats") {
             $controller->statsPut();
         } elseif ($request == "friends") {
             $controller->friendsPut();
         } elseif ($request == "targets") {
             $controller->targetsPut();
-        } elseif ($request == "addfriend") {
-            $controller->addFriend();
         } else {
             not_valid_method();
         }
