@@ -125,7 +125,15 @@ class Services
     public function UpdateFriends(int $id, string $friends): void
     {
         $oldFriends = $this->database->GetUserInfo($id)["_Friends"] ?? "";
-        $friends = $oldFriends . "," . $friends;
+        if (!$this->database->IfUserExists($friends)) {
+            throw new Exception("User Does Not Exists", 400);
+        }
+        if (str_contains($oldFriends, $friends)) {
+            throw new Exception("Already Friends", 400);
+        }
+        if ($oldFriends !== "") {
+            $friends = $oldFriends . "," . $friends;
+        }
         $this->database->SetFriends($id, $friends);
         echo json_encode($this->database->GetUserInfo($id));
     }

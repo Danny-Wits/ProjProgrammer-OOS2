@@ -149,8 +149,8 @@ class Controller
         }
         $id = (int) $id;
         $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
-        $friendUserName = $requestArgs['username'] ?? null;
-        if (!isset($friendUserName) || !is_numeric($friendUserName)) {
+        $friendUserName = $requestArgs['friendUserName'] ?? null;
+        if (!isset($friendUserName) || trim($friendUserName) == "") {
             throw new Exception("Valid friendUserName is required", 400);
         }
         $services = new Services($this->Database);
