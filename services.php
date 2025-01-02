@@ -119,8 +119,53 @@ class Services
     }
     public function UpdateStats(int $id, string $stats): void
     {
+        if (!$this->validStats($stats)) {
+            throw new Exception("Invalid Stats", 400);
+        }
         $this->database->SetStats($id, $stats);
         echo json_encode($this->database->GetUserInfo($id));
+    }
+    public $statsInfo = [
+        "typingSpeed" => 200,
+        "leetcodeScore" => 5000,
+        "codeforcesScore" => 4000,
+        "hackerrankScore" => 10000,
+        "codechefScore" => 4000,
+        "geeksforgeeksScore" => 5000,
+        "hackerearthScore" => 4000,
+        "topcoderScore" => 4000,
+        "githubContributions" => 100000,
+        "stackOverflowReputation" => 100000,
+        "openSourceContributions" => 1000,
+        "languagesMastered" => 50,
+        "projectsCompleted" => 1000,
+        "certificationsEarned" => 100,
+        "bugBountiesSolved" => 500,
+        "hackathonsParticipated" => 500,
+        "coursesCompleted" => 1000,
+        "booksRead" => 1000,
+        "algorithmsMastered" => 500,
+        "problemSolvingStreak" => 365,
+        "dailyCodingHours" => 24,
+        "challengesCompleted" => 5000,
+        "freelanceProjects" => 500,
+        "competitionsWon" => 100,
+        "linesOfCode" => 10000000,
+    ];
+
+    public function validStats(string $stats): bool
+    {
+        $stats = (array) json_decode($stats);
+        foreach ($this->statsInfo as $key => $value) {
+            if (!isset($stats[$key])) {
+                return false;
+            }
+            if ($stats[$key] > $value) {
+                return false;
+            }
+        }
+        return true;
+
     }
     public function UpdateFriends(int $id, string $friends): void
     {
