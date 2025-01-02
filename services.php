@@ -122,7 +122,9 @@ class Services
         if (!$this->validStats($stats)) {
             throw new Exception("Invalid Stats", 400);
         }
+
         $this->database->SetStats($id, $stats);
+        $this->UpdateScore($id, $stats);
         echo json_encode($this->database->GetUserInfo($id));
     }
     public $statsInfo = [
@@ -166,6 +168,16 @@ class Services
         }
         return true;
 
+    }
+    public function UpdateScore(int $id, string $stats): void
+    {
+        $stats = (array) json_decode($stats);
+        $score = 0;
+        foreach ($this->statsInfo as $key => $value) {
+            $score += $stats[$key] / $value * 100;
+        }
+        $score = round($score);
+        $this->database->UpdateScore($id, $score);
     }
     public function UpdateFriends(int $id, string $friends): void
     {

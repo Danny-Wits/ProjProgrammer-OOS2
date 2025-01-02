@@ -156,4 +156,12 @@ class Database
         return $users ?: [];
 
     }
+    public function updateScore(int $id, int $score)
+    {
+        $query = "update InfoTable SET _Score = :score WHERE _UserId = :userId;";
+        $preparedStatement = $this->prepare($query);
+        $preparedStatement->bindParam(':userId', $id, PDO::PARAM_INT);
+        $preparedStatement->bindParam(':score', $score, PDO::PARAM_INT);
+        $preparedStatement->execute();
+    }
 }
