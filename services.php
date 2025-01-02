@@ -174,7 +174,7 @@ class Services
         $stats = (array) json_decode($stats);
         $score = 0;
         foreach ($this->statsInfo as $key => $value) {
-            $score += $stats[$key] / $value * 100;
+            $score += intval($stats[$key]) ?? 0 / $value * 100;
         }
         $score = round($score);
         $this->database->UpdateScore($id, $score);
