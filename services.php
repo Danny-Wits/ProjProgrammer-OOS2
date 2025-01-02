@@ -137,6 +137,22 @@ class Services
         $this->database->SetFriends($id, $friends);
         echo json_encode($this->database->GetUserInfo($id));
     }
+
+    public function RemoveFriend(int $id, string $friendUserName): void
+    {
+        $oldFriends = $this->database->GetUserInfo($id)["_Friends"] ?? "";
+        if (!$this->database->IfUserExists($friendUserName)) {
+            throw new Exception("User Does Not Exists", 400);
+        }
+        if (!str_contains($oldFriends, $friendUserName)) {
+            throw new Exception("Not Friends", 400);
+        }
+        $friends = str_replace("," . $friendUserName, "", $oldFriends);
+        $friends = str_replace($friendUserName . ",", "", $friends);
+        $this->database->SetFriends($id, $friends);
+        echo json_encode($this->database->GetUserInfo($id));
+
+    }
     public function UpdateTarget(int $id, string $target): void
     {
         $this->database->SetTargets($id, $target);

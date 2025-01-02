@@ -156,6 +156,21 @@ class Controller
         $services = new Services($this->Database);
         $services->UpdateFriends($id, $friendUserName);
     }
+
+    public function removeFriend(){
+        $id = $this->requestArgs[0] ?? null;
+        if (!isset($id) || !is_numeric($id)) {
+            throw new Exception("Valid ID is required", 400);
+        }
+        $id = (int) $id;
+        $requestArgs = (array) json_decode(file_get_contents(filename: "php://input"), true);
+        $friendUserName = $requestArgs['friendUserName'] ?? null;
+        if (!isset($friendUserName) || trim($friendUserName) == "") {
+            throw new Exception("Valid friendUserName is required", 400);
+        }
+        $services = new Services($this->Database);
+        $services->RemoveFriend($id, $friendUserName);
+    }
     //!PUT END POINTS
     public function usersPut(): void
     {
@@ -306,6 +321,8 @@ switch ($requestMethod) {
             $controller->usersPut();
         } elseif ($request == "addfriend") {
             $controller->addFriend();
+        } elseif ($request == "removefriend") {
+            $controller->removeFriend();
         } elseif ($request == "stats") {
             $controller->statsPut();
         } elseif ($request == "friends") {
