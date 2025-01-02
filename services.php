@@ -149,6 +149,7 @@ class Services
         }
         $friends = str_replace("," . $friendUserName, "", $oldFriends);
         $friends = str_replace($friendUserName . ",", "", $friends);
+        $friends = str_replace($friendUserName, "", $friends);
         $this->database->SetFriends($id, $friends);
         echo json_encode($this->database->GetUserInfo($id));
 
